@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e107Plugin name="Reference" lan="" version="1.0" date="2015-09-14" compatibility="2.0" installRequired="true" >
+	<author name="e107" url="e107.org" />
+	<summary lan="">Add a list of references/source urls to news items </summary>
+	<description lan="">The Reference plugin adds a tab to your news editing page. You can add multiple URLS of references and sources and display them using a custom shortcode.</description>
+	<keywords>
+		<word>reference</word>
+		<word>sources</word>
+		<word>footnote</word>
+	</keywords>
+	<category>content</category>
+	<copyright>GPL</copyright>
+	<adminLinks>
+		<link url="admin_config.php" description="" icon="" iconSmall="" primary="true" >LAN_CONFIGURE</link>
+	</adminLinks>
+	<pluginPrefs>
+		<pref name='active'>1</pref>
+	</pluginPrefs>
+</e107Plugin>

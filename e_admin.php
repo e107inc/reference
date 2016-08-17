@@ -35,8 +35,6 @@ class reference_admin
 		$id         = $ui->getId();
 		$sql        = e107::getDb();
 
-
-
 		$config = array();
 
 
@@ -47,7 +45,7 @@ class reference_admin
 				$config['tabs'] = array('ref'=>'References');
 
 
-				if(!empty($id) && ( $url = $sql->retrieve("reference","ref_data", "ref_table='news' AND ref_pid=".$id)))
+				if(($action == 'edit') && !empty($id) && ( $url = $sql->retrieve("reference","ref_data", "ref_table='news' AND ref_pid=".$id)))
 				{
 					$default = $url;
 				}

@@ -31,7 +31,7 @@ class reference_parse
 	}
 
 
-	function toHtml($text, $context='')
+	function toHTML($text, $context='')
 	{
 		$text = preg_replace('/\<sup\>(\d*)\<\/sup\>/',"<sup><a href='#reference-$1' title='Go to reference'>$1</a></sup>",$text);
 		return $text;

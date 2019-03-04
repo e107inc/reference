@@ -46,6 +46,46 @@
 			}
 
 			return false;
-	}
+		}
 
-}
+
+		static function getPage()
+		{
+
+			$sc = e107::getScBatch('page');
+			$bla= $sc->getVars();
+			var_dump($bla);
+			$item = $sc->getScVar('news_item');
+
+			if(!empty($item['news_id']))
+			{
+				$data = e107::getDb()->retrieve('reference', 'ref_data', "ref_table='page' AND ref_pid=".$item['news_id']);
+
+				if(!empty($data))
+				{
+					$refs = json_decode($data,true);
+
+					$arr = array();
+
+					foreach($refs['url'] as $k=>$v)
+					{
+						if(empty($v))
+						{
+							continue;
+						}
+
+						$arr[$k] = array('url'=>$v, 'name'=>$refs['name'][$k]);
+
+					}
+
+					return $arr;
+
+				}
+
+			}
+
+			return false;
+		}
+
+
+	}

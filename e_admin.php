@@ -4,7 +4,7 @@
 //v2.x Standard for extending admin areas.
 
 
-class reference_admin
+class reference_admin implements e_admin_addon_interface
 {
 	private $active = false;
 
@@ -16,10 +16,21 @@ class reference_admin
 
 		e107::js('footer', e_PLUGIN_ABS.'reference/reference.js');
 
+	}
 
+	function load($event, $ids)
+	{
+		$sql = e107::getDb();
+		$data = $sql->retrieve("reference","ref_pid, ref_data", "ref_table='".$event."' AND ref_pid IN(".$ids.")", true);
 
+		$arr = array();
+		foreach($data as $row)
+		{
+			$id = $row['ref_pid'];
+			$arr[$id]['url'] = $row['ref_data'];
+		}
 
-
+		return $arr;
 	}
 
 
@@ -28,7 +39,7 @@ class reference_admin
 	 * @param $ui admin-ui object
 	 * @return array
 	 */
-	public function config($ui)
+	public function config(e_admin_ui $ui)
 	{
 		$action     = $ui->getAction(); // current mode: create, edit, list
 		$type       = $ui->getEventName(); // 'wmessage', 'news' etc.
@@ -41,11 +52,12 @@ class reference_admin
 		switch($type)
 		{
 			case "news":
+			case "page":
 
 				$config['tabs'] = array('ref'=>'References');
 
 
-				if(($action == 'edit') && !empty($id) && ( $url = $sql->retrieve("reference","ref_data", "ref_table='news' AND ref_pid=".$id)))
+				if(($action == 'edit') && !empty($id) && ( $url = $sql->retrieve("reference","ref_data", "ref_table='".$type."' AND ref_pid=".$id)))
 				{
 					$default = $url;
 				}
@@ -57,7 +69,7 @@ class reference_admin
 
 				if($this->active == true)
 				{
-					$config['fields']['url'] =   array ( 'title' =>"", 'type' => 'method',  'tab'=>'ref',  'writeParms'=> array('nolabel'=>true, 'size'=>'xxlarge', 'placeholder'=>'', 'default'=>$default), 'width' => 'auto', 'help' => '', 'readParms' => '', 'class' => 'left', 'thclass' => 'left',  );
+					$config['fields']['url'] =   array ( 'title' =>"Reference", 'type' => 'method',  'tab'=>'ref',  'writeParms'=> array('nolabel'=>true, 'size'=>'xxlarge', 'placeholder'=>'', 'default'=>$default), 'width' => 'auto', 'help' => '', 'readParms' => '', 'class' => 'left', 'thclass' => 'left',  );
 				}
 				break;
 		}
@@ -73,7 +85,7 @@ class reference_admin
 	 * Process Posted Data.
 	 * @param $ui admin-ui object
 	 */
-	public function process($ui, $id=0)
+	public function process(e_admin_ui $ui, $id=0)
 	{
 
 		$data       = $ui->getPosted();
@@ -97,18 +109,20 @@ class reference_admin
 			return;
 		}
 
+		
+
 		if(!empty($id) && $this->active)
 		{
 
 			if(!empty($data['x_reference_url']))
 			{
 
-				$refData = json_encode($data['x_reference_url'], JSON_PRETTY_PRINT);
+				$refData = e107::serialize($data['x_reference_url'], 'json');
 
 				$insert = array(
 						"ref_pid"=> $id,
 						"ref_table"=>$type,
-						'ref_title'=>$data['news_title'],
+						'ref_title'=> !empty($data['news_title']) ? $data['news_title'] : 'unknown',
 						'ref_data'=> $refData,
 						'_DUPLICATE_KEY_UPDATE' => true
 				);
@@ -122,7 +136,8 @@ class reference_admin
 				else
 				{
 					e107::getMessage()->addError("Couldn't save references: ".var_export($result,true));
-					e107::getMessage()->addDebug(var_export($insert,true));
+					e107::getMessage()->addDebug($sql->getLastErrorText());
+					e107::getMessage()->addDebug($sql->getLastQuery());
 				}
 
 
@@ -142,7 +157,13 @@ class reference_admin
 class reference_admin_form extends e_form
 {
 
-	function x_reference_url($curval,$mode,$att)
+	/**
+	 * @param $curval
+	 * @param $mode
+	 * @param $att
+	 * @return null|string
+	 */
+	function x_reference_url($curval, $mode, $att=null)
 	{
 
 		$vals = array();
@@ -152,28 +173,64 @@ class reference_admin_form extends e_form
 			$vals = json_decode($curval,true);
 		}
 
-		$text = "<table class='table table-striped table-condensed table-bordered'>
-		<tr><th class='text-right'>No.</th><th>URL</th><th>Title</th></tr>";
-
-		for ($i = 1; $i <= 20; $i++)
+		switch($mode)
 		{
-		    $text .= "<tr>
-		            <td class='text-right'>".$i."</td>
-		             <td>".$this->text('x_reference_url[url]['.$i.']', $vals['url'][$i], 255,array('class'=>'x-reference-url', 'id'=>'x-reference-url-url-'.$i, 'size'=>'block-level'))."</td>
-		            <td>".$this->text('x_reference_url[name]['.$i.']', $vals['name'][$i], 255,array('id'=>'x-reference-url-name-'.$i,'size'=>'block-level'))."</td>
+			case "read":
+
+				if(!empty($vals))
+				{
+					$text = "<ol style='font-size:80%;padding-left:10px'>";
+
+					foreach($vals['url'] as $k => $v)
+					{
+						if(empty($vals['name'][$k]))
+						{
+							continue;
+						}
+
+						$text .= "<li><a target='_blank' href='" . $v . "'>" . $vals['name'][$k] . "</a></li>";
+					}
+
+					$text .= "</ol>";
+
+					return $text;
+				}
+
+				return null;
+				break;
+
+			case "write":
+				$text = "<table class='table table-striped table-condensed table-bordered'>
+				<tr><th class='text-right'>No.</th><th>URL</th><th>Title</th></tr>";
+
+				for($i = 1; $i <= 20; $i++)
+				{
+					$text .= "<tr>
+		            <td class='text-right'>" . $i . "</td>
+		             <td>" . $this->text('x_reference_url[url][' . $i . ']', $vals['url'][$i], 255, array('class' => 'x-reference-url', 'id' => 'x-reference-url-url-' . $i, 'size' => 'block-level')) . "</td>
+		            <td>" . $this->text('x_reference_url[name][' . $i . ']', $vals['name'][$i], 255, array('id' => 'x-reference-url-name-' . $i, 'size' => 'block-level')) . "</td>
 		            </tr>";
+				}
+
+				$text .= "</table>";
+
+				$text .= $this->hidden('meta-parse', SITEURLBASE . e_PLUGIN_ABS . "reference/meta.php", array('id' => 'meta-parse'));
+
+				return $text;
+				break;
+
+			default:
+				// code to be executed if n is different from all labels;
 		}
-	
-		$text .= "</table>";
 
-		$text .= $this->hidden('meta-parse', SITEURLBASE.e_PLUGIN_ABS."reference/meta.php", array('id'=>'meta-parse'));
 
-		return $text;
 
+
+
+		return null;
 
 
 	}
 
 }
 
-?>

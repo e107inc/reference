@@ -1,4 +1,4 @@
-$('.x-reference-url').on('keyup change', function(e)
+$('.x-reference-url').on('blur', function(e)
     {
 
 				spUrl = $(this).val();
@@ -17,11 +17,11 @@ $('.x-reference-url').on('keyup change', function(e)
         		src     = src + '?url=' + encodeURIComponent(spUrl);
 
 
-
-
                 var target = $(this).attr('id');
 
                 target = '#'+ target.replace('url-url','url-name');
+
+                $(target).val('Loading....');
 
 
 				$.ajax({
@@ -38,6 +38,7 @@ $('.x-reference-url').on('keyup change', function(e)
                     },
                      error: function() {
                         console.log("Couldn't get title for " + spUrl);
+                         $(target).val('Loading Failed!');
                      }
                 })
 

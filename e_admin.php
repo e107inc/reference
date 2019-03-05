@@ -109,7 +109,7 @@ class reference_admin implements e_admin_addon_interface
 			return;
 		}
 
-		
+
 
 		if(!empty($id) && $this->active)
 		{

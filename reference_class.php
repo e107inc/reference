@@ -24,7 +24,7 @@
 
 				if(!empty($data))
 				{
-					$refs = json_decode($data,true);
+					$refs =  e107::unserialize($data);
 
 					$arr = array();
 
@@ -53,17 +53,15 @@
 		{
 
 			$sc = e107::getScBatch('page');
-			$bla= $sc->getVars();
-			var_dump($bla);
-			$item = $sc->getScVar('news_item');
+			$row= $sc->getVars();
 
-			if(!empty($item['news_id']))
+			if(!empty($row['page_id']))
 			{
-				$data = e107::getDb()->retrieve('reference', 'ref_data', "ref_table='page' AND ref_pid=".$item['news_id']);
+				$data = e107::getDb()->retrieve('reference', 'ref_data', "ref_table='page' AND ref_pid=".(int) $row['page_id']);
 
 				if(!empty($data))
 				{
-					$refs = json_decode($data,true);
+					$refs = e107::unserialize($data);
 
 					$arr = array();
 

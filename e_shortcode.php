@@ -41,7 +41,7 @@ class reference_shortcodes extends e_shortcode
 
 	}
 
-		function sc_reference_page()
+	function sc_reference_page()
 	{
 		$newsReferences = reference::getPage();
 
@@ -51,7 +51,7 @@ class reference_shortcodes extends e_shortcode
 
 			foreach($newsReferences as $k=>$v)
 			{
-				$text .= "<p><small>".$k.". <a rel='external' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
+				$text .= "<p><small>".$k.". <a target='_blank' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
 						</small></p>";
 			}
 

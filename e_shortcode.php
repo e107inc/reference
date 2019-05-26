@@ -47,7 +47,7 @@ class reference_shortcodes extends e_shortcode
 
 		if(!empty($newsReferences))
 		{
-			$text = "<div class='reference'><h3>Sources</h3>";
+			$text = "<div class='reference'><h3>Further Reading</h3>";
 
 			foreach($newsReferences as $k=>$v)
 			{

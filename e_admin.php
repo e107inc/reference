@@ -83,7 +83,9 @@ class reference_admin implements e_admin_addon_interface
 
 	/**
 	 * Process Posted Data.
-	 * @param $ui admin-ui object
+	 *
+	 * @param e_admin_ui $ui admin-ui object
+	 * @param int $id
 	 */
 	public function process(e_admin_ui $ui, $id=0)
 	{
@@ -165,7 +167,7 @@ class reference_admin_form extends e_form
 	 */
 	function x_reference_url($curval, $mode, $att=null)
 	{
-
+		unset($att);
 		$vals = array();
 
 		if(!empty($curval))

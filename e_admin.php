@@ -106,11 +106,11 @@ class reference_admin implements e_admin_addon_interface
 			return;
 		}
 
-		if(e_LANGUAGE != 'English')
+	/*	if(e_LANGUAGE != 'English')
 		{
 			return;
 		}
-
+*/
 
 
 		if(!empty($id) && $this->active)

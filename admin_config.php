@@ -82,6 +82,8 @@ class reference_ui extends e_admin_ui
 	//	protected $preftabs        = array('General', 'Other' );
 		protected $prefs = array(
 			'active'		=> array('title'=> 'Active', 'tab'=>0, 'type'=>'boolean', 'data' => 'str', 'help'=>'Help Text goes here'),
+			'heading_page'  => array('title'=> 'Page Title', 'tab'=>0, 'multilan'=>true,  'type'=>'text', 'help'=>'Heading for References'),
+			'heading_news'  => array('title'=> 'News Title', 'tab'=>0, 'multilan'=>true, 'type'=>'text',  'help'=>'Heading for References'),
 		); 
 
 	

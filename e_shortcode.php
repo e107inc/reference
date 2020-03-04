@@ -24,7 +24,9 @@ class reference_shortcodes extends e_shortcode
 
 		if(!empty($newsReferences))
 		{
-			$text = "<div class='reference'><h3>Sources</h3>";
+			$tmp = e107::pref('reference', 'heading_news', array());
+			$title = !empty($tmp[e_LANGUAGE]) ? $tmp[e_LANGUAGE] : "References";
+			$text = "<div class='reference'><h3>".$title."</h3>";
 
 			foreach($newsReferences as $k=>$v)
 			{
@@ -47,7 +49,9 @@ class reference_shortcodes extends e_shortcode
 
 		if(!empty($newsReferences))
 		{
-			$text = "<div class='reference'><h3>Further Reading</h3>";
+			$tmp = e107::pref('reference', 'heading_news', array());
+			$title = !empty($tmp[e_LANGUAGE]) ? $tmp[e_LANGUAGE] : "References";
+			$text = "<div class='reference'><h3>".$title."</h3>";
 
 			foreach($newsReferences as $k=>$v)
 			{

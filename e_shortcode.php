@@ -69,4 +69,3 @@ class reference_shortcodes extends e_shortcode
 	}
 
 }
-?>

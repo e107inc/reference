@@ -209,8 +209,8 @@ class reference_admin_form extends e_form
 				{
 					$text .= "<tr>
 		            <td class='text-right'>" . $i . "</td>
-		             <td>" . $this->text('x_reference_url[url][' . $i . ']', $vals['url'][$i], 255, array('class' => 'x-reference-url', 'id' => 'x-reference-url-url-' . $i, 'size' => 'block-level')) . "</td>
-		            <td>" . $this->text('x_reference_url[name][' . $i . ']', $vals['name'][$i], 255, array('id' => 'x-reference-url-name-' . $i, 'size' => 'block-level')) . "</td>
+		             <td>" . $this->text('x_reference_url[url][' . $i . ']', varset($vals['url'][$i]), 255, array('class' => 'x-reference-url', 'id' => 'x-reference-url-url-' . $i, 'size' => 'block-level')) . "</td>
+		            <td>" . $this->text('x_reference_url[name][' . $i . ']', varset($vals['name'][$i]), 255, array('id' => 'x-reference-url-name-' . $i, 'size' => 'block-level')) . "</td>
 		            </tr>";
 				}
 

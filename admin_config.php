@@ -159,4 +159,3 @@ e107::getAdminUI()->runPage();
 require_once(e_ADMIN."footer.php");
 exit;
 
-?>

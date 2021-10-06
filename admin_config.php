@@ -72,7 +72,7 @@ class reference_ui extends e_admin_ui
 		  'ref_table' =>   array ( 'title' => 'Table', 'type' => 'text', 'data' => 'str', 'readonly'=>true, 'width' => 'auto', 'filter' => true, 'help' => '', 'readParms' => '', 'writeParms' => array(), 'class' => 'left', 'thclass' => 'left',  ),
 		  'ref_pid' =>   array ( 'title' => 'Pid', 'type' => 'number', 'data' => 'int', 'width' => 'auto', 'help' => '', 'readParms' => '', 'writeParms' => array(), 'class' => 'left', 'thclass' => 'left',  ),
 		  'ref_title' =>   array ( 'title' => LAN_TITLE, 'type' => 'text', 'data' => 'str', 'width' => 'auto', 'inline' => true, 'help' => '', 'readParms' => '', 'writeParms' => array(), 'class' => 'left', 'thclass' => 'left',  ),
-		  'ref_data' =>   array ( 'title' => LAN_URL, 'type' => 'url', 'data' => 'str', 'width' => 'auto', 'inline' => true, 'help' => '', 'readParms' => '', 'writeParms' => array(), 'class' => 'left', 'thclass' => 'left',  ),
+		  'ref_data' =>   array ( 'title' => LAN_URL, 'type' => 'method', 'data' => 'str', 'width' => 'auto', 'inline' => true, 'help' => '', 'readParms' => '', 'writeParms' => array(), 'class' => 'left', 'thclass' => 'left',  ),
 		  'options' =>   array ( 'title' => LAN_OPTIONS, 'type' => null, 'data' => null, 'width' => '10%', 'thclass' => 'center last', 'class' => 'center last', 'forced' => '1',  ),
 		);		
 		
@@ -97,7 +97,7 @@ class reference_ui extends e_admin_ui
 		
 		// ------- Customize Create --------
 		
-		public function beforeCreate($new_data)
+		public function beforeCreate($new_data, $old_data)
 		{
 			return $new_data;
 		}
@@ -147,7 +147,36 @@ class reference_ui extends e_admin_ui
 
 class reference_form_ui extends e_admin_form_ui
 {
+	function ref_data($curVal,$mode)
+	{
+		if(empty($curVal))
+		{
+			return null;
+		}
 
+		$tmp = e107::unserialize($curVal);
+		$text = "<table class='table table-bordered table-condensed table-striped'>";
+
+		foreach($tmp['url'] as $key=>$url)
+		{
+			if(empty($url))
+			{
+				continue;
+			}
+
+			$text .= "<tr>
+					<td>".$tmp['name'][$key]."</td>
+					<td>".$url."</td>
+					</tr>";
+
+
+		}
+
+		$text .= "</table>";
+
+		return $text;
+
+	}
 }		
 		
 		

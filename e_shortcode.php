@@ -26,11 +26,11 @@ class reference_shortcodes extends e_shortcode
 		{
 			$tmp = e107::pref('reference', 'heading_news', array());
 			$title = !empty($tmp[e_LANGUAGE]) ? $tmp[e_LANGUAGE] : "References";
-			$text = "<div class='reference'><h3>".$title."</h3>";
+			$text = "<div class='reference'><h4>".$title."</h4>";
 
 			foreach($newsReferences as $k=>$v)
 			{
-				$text .= "<p><small>".$k.". <a rel='external' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
+				$text .= "<p><small>".$k.". <a rel='nofollow noopener noreferrer external' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
 						</small></p>";
 			}
 
@@ -51,11 +51,11 @@ class reference_shortcodes extends e_shortcode
 		{
 			$tmp = e107::pref('reference', 'heading_news', array());
 			$title = !empty($tmp[e_LANGUAGE]) ? $tmp[e_LANGUAGE] : "References";
-			$text = "<div class='reference'><h3>".$title."</h3>";
+			$text = "<div class='reference'><h4>".$title."</h4>";
 
 			foreach($newsReferences as $k=>$v)
 			{
-				$text .= "<p><small>".$k.". <a target='_blank' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
+				$text .= "<p><small>".$k.". <a rel='nofollow noopener noreferrer external' target='_blank' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
 						</small></p>";
 			}
 

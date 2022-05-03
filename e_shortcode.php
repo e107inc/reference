@@ -18,54 +18,88 @@ class reference_shortcodes extends e_shortcode
    //
 	}
 
-	function sc_reference_news()
+
+	function sc_reference_news($parm=null)
 	{
-		$newsReferences = reference::getNews();
+		return $this->render('news', $parm);
+	}
 
-		if(!empty($newsReferences))
+
+	function sc_reference_page($parm=null)
+	{
+		return $this->render('page', $parm);
+	}
+
+	/**
+	 * Render the reference list.
+	 * @param string $type news|page
+	 * @param array $parm = [
+	 *  'class'     => 'custom class',
+	 *  'expandit'  => 1 | 0
+	 *  'glyph'     => 'fa-icon'
+	 * 
+	 * ]
+	 * @return string
+	 */
+	private function render($type, $parm=null)
+	{
+
+		switch($type)
 		{
-			$tmp = e107::pref('reference', 'heading_news', array());
-			$title = !empty($tmp[e_LANGUAGE]) ? $tmp[e_LANGUAGE] : "References";
-			$text = "<div class='reference'><h4>".$title."</h4>";
+			case "page":
+				$references = reference::getPage();
+				break;
 
-			foreach($newsReferences as $k=>$v)
-			{
-				$text .= "<p><small>".$k.". <a rel='nofollow noopener noreferrer external' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
-						</small></p>";
-			}
+			case "news":
+				$references = reference::getNews();
+				break;
+		}
 
-			$text .= "</div>";
-
-			return $text;
-
+		if(empty($references))
+		{
+			return null; 
 		}
 
 
-	}
+		$class = '';
+		$classContainer = '';
+		$glyph = '';
+		$toggle = '';
 
-	function sc_reference_page()
-	{
-		$newsReferences = reference::getPage();
-
-		if(!empty($newsReferences))
+		$tmp = e107::pref('reference', 'heading_'.$type, array());
+		$title = !empty($tmp[e_LANGUAGE]) ? $tmp[e_LANGUAGE] : "References";
+			
+		if(!empty($parm['class']))
 		{
-			$tmp = e107::pref('reference', 'heading_news', array());
-			$title = !empty($tmp[e_LANGUAGE]) ? $tmp[e_LANGUAGE] : "References";
-			$text = "<div class='reference'><h4>".$title."</h4>";
+			$class = ' '.$parm['class'];
+		}
+			//<div class="d-flex align-items-center justify-content-between btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseThree">Further References for MSC, BMC, Stemcell Secretome and EVs</div>
 
-			foreach($newsReferences as $k=>$v)
-			{
-				$text .= "<p><small>".$k.". <a rel='nofollow noopener noreferrer external' target='_blank' id='reference-{$k}' href='".$v['url']."'>".$v['name']."</a>
-						</small></p>";
-			}
+		if(!empty($parm['expandit']))
+		{
+			$class .= ' hide e-expandit';
+			$toggle = " data-target='reference-page-container' ";
+			$classContainer = ' class="collapse" ';
+		}
 
-			$text .= "</div>";
-
-			return $text;
-
+		if(!empty($parm['glyph']))
+		{
+			$glyph = e107::getParser()->toGlyph($parm['glyph'],['embed'=>1]);
 		}
 
 
-	}
+		$text = "<div class='reference'>".$glyph."<h4 class='".$class."' ".$toggle.">".$title."</h4>
+			<div id='reference-".$type."-container' ".$classContainer.">";
 
+		foreach($references as $k=>$v)
+		{
+			$text .= "<p><small>".$k.". <a rel='nofollow noopener noreferrer external' target='_blank' id='reference-".$k."' href='".$v['url']."'>".$v['name']."</a>
+					</small></p>";
+		}
+
+		$text .= "</div></div>";
+
+		return $text;
+
+	}
 }

@@ -36,6 +36,10 @@
 						}
 
 						$arr[$k] = array('url'=>$v, 'name'=>$refs['name'][$k]);
+						if(!empty($refs['description'][$k]))
+						{
+							$arr[$k]['description'] = $refs['description'][$k];
+						}
 
 					}
 
@@ -73,7 +77,10 @@
 						}
 
 						$arr[$k] = array('url'=>$v, 'name'=>$refs['name'][$k]);
-
+						if(!empty($refs['description'][$k]))
+						{
+							$arr[$k]['description'] = $refs['description'][$k];
+						}
 					}
 
 					return $arr;

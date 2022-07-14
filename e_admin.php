@@ -170,7 +170,7 @@ class reference_admin_form extends e_form
 		unset($att);
 		$vals = array();
 
-		if(!empty($curval))
+		if(!empty($curval) && is_string($curval))
 		{
 			$vals = json_decode($curval,true);
 		}
@@ -203,14 +203,16 @@ class reference_admin_form extends e_form
 
 			case "write":
 				$text = "<table class='table table-striped table-condensed table-bordered'>
-				<tr><th class='text-right'>No.</th><th>URL</th><th>Title</th></tr>";
+				<tr><th class='text-right'>No.</th><th>URL</th><th>Title</th><th>Description</th></tr>";
 
 				for($i = 1; $i <= 20; $i++)
 				{
 					$text .= "<tr>
 		            <td class='text-right'>" . $i . "</td>
-		             <td>" . $this->text('x_reference_url[url][' . $i . ']', varset($vals['url'][$i]), 255, array('class' => 'x-reference-url', 'id' => 'x-reference-url-url-' . $i, 'size' => 'block-level')) . "</td>
-		            <td>" . $this->text('x_reference_url[name][' . $i . ']', varset($vals['name'][$i]), 255, array('id' => 'x-reference-url-name-' . $i, 'size' => 'block-level')) . "</td>
+		             <td>" . $this->textarea('x_reference_url[url][' . $i . ']', varset($vals['url'][$i]), 2,80, array('class' => 'x-reference-url', 'id' => 'x-reference-url-url-' . $i, 'size' => 'block-level')) . "</td>
+		            <td>" . $this->textarea('x_reference_url[name][' . $i . ']', varset($vals['name'][$i]), 2,80, array('id' => 'x-reference-url-name-' . $i, 'size' => 'block-level')) . "</td>
+		             <td>" . $this->textarea('x_reference_url[description][' . $i . ']', varset($vals['description'][$i]), 2,80, array('id' => 'x-reference-url-description-' . $i, 'size' => 'block-level')) . "</td>
+		          
 		            </tr>";
 				}
 

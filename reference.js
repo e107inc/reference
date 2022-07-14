@@ -1,4 +1,4 @@
-$('.x-reference-url').on('blur', function(e)
+$('.x-reference-url').on('input focus', function(e)
     {
 
 				spUrl = $(this).val();
@@ -19,10 +19,11 @@ $('.x-reference-url').on('blur', function(e)
 
                 var target = $(this).attr('id');
 
-                target = '#'+ target.replace('url-url','url-name');
+                var targetTitle = '#'+ target.replace('url-url','url-name');
+                var targetDescription = '#'+ target.replace('url-url','url-description');
 
-                $(target).val('Loading....');
-
+                $(targetTitle).val('Loading....');
+                $(targetDescription).val('Loading....');
 
 				$.ajax({
 				 url: src,
@@ -30,15 +31,17 @@ $('.x-reference-url').on('blur', function(e)
                     success: function(data){
                       if(data)
                       {
-                         //   console.log(data);
-                            $(target).val(data);
+                          var a = $.parseJSON(data);
+                        //   console.log(a.description);
+                            $(targetTitle).val(a.title);
+                            $(targetDescription).val(a.description);
                       }
 
 
                     },
                      error: function() {
                         console.log("Couldn't get title for " + spUrl);
-                         $(target).val('Loading Failed!');
+                         $(targetTitle).val('Loading Failed!');
                      }
                 })
 

@@ -44,12 +44,19 @@ class reference_meta
 		$meta = e107::getParser()->getTags($data,'title,meta');
 
 		$title = $this->getTitle($meta);
+		$description = $this->getDescription($meta);
 
-		echo $title;
+		$arr = [
+			'title'=>$title,
+			'description'=>$description
+		];
+
+		echo json_encode($arr);
+
 
 	}
 
-	function getTitle($array)
+	private function getTitle($array)
 	{
 		if(!empty($array['meta']))
 		{
@@ -83,6 +90,38 @@ class reference_meta
 	}
 
 
+	private function getDescription($array)
+	{
+		if(!empty($array['meta']))
+		{
+			foreach($array['meta'] as $m)
+			{
+				if(!empty($m['name']) && $m['name'] == 'og:description')
+				{
+					return $m['content'];
+				}
+
+				if(!empty($m['property']) && $m['property'] == 'og:description')
+				{
+					return $m['content'];
+				}
+
+
+			}
+
+		//	print_a($array['meta']);
+
+		}
+
+		if(!empty($array['title'][0]['@value']))
+		{
+			return strip_tags($array['title'][0]['@value']);
+		}
+
+
+
+
+	}
 
 
 }

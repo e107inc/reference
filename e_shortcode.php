@@ -37,7 +37,7 @@ class reference_shortcodes extends e_shortcode
 	 *  'class'     => 'custom class',
 	 *  'expandit'  => 1 | 0
 	 *  'glyph'     => 'fa-icon'
-	 * 
+	 *
 	 * ]
 	 * @return string
 	 */
@@ -78,7 +78,7 @@ class reference_shortcodes extends e_shortcode
 		if(!empty($parm['expandit']))
 		{
 			$class .= ' hide e-expandit';
-			$toggle = " data-target='reference-page-container' ";
+			$toggle = " data-target='reference-".$type."-container' ";
 			$classContainer = ' class="collapse" ';
 		}
 
@@ -87,14 +87,28 @@ class reference_shortcodes extends e_shortcode
 			$glyph = e107::getParser()->toGlyph($parm['glyph'],['embed'=>1]);
 		}
 
+		$linkIcon = e107::getParser()->toGlyph('fas-external-link-alt',['embed'=>1]);
+
 
 		$text = "<div class='reference'>".$glyph."<h4 class='".$class."' ".$toggle.">".$title."</h4>
 			<div id='reference-".$type."-container' ".$classContainer.">";
 
 		foreach($references as $k=>$v)
 		{
-			$text .= "<p><small>".$k.". <a rel='nofollow noopener noreferrer external' target='_blank' id='reference-".$k."' href='".$v['url']."'>".$v['name']."</a>
-					</small></p>";
+			$text .= "<p>".$k.'. ';
+		//
+			$text .= $v['name'];
+		//	$text .= "</small>";
+			$text .= " <a rel='nofollow noopener noreferrer external' target='_blank' id='reference-".$k."' href='".$v['url']."'>";
+			$text .=  $linkIcon;
+			$text .= "</a>";
+
+			if(!empty($parm['description']) && !empty($v['description']))
+			{
+				$text .= "<small style='display:block;margin-left:15px'>".$v['description']."</small>";
+			}
+
+			$text .= "</p>";
 		}
 
 		$text .= "</div></div>";
